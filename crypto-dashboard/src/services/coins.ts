@@ -1,16 +1,21 @@
-
 import type { Coin } from "../assets/types/coin";
 import { Api } from "./api";
 
-
-
-
 export async function getCoins() {
+  try {
 
-    const response = await Api.get<Coin[]>(
-        "/coins/markets"
-    )
+    const currency = localStorage.getItem("currency") || "usd";
 
-    return response.data
+    const response = await Api.get<Coin[]>("/coins/markets", {
+      params: {
+        vs_currency: currency,
+      },
+    });
 
+    return response.data;
+
+  } catch (error) {
+    console.log("Erro na API:", error);
+    throw error;
+  }
 }
